@@ -77,16 +77,84 @@ BigNumber BigNumber::operator+=(const BigNumber &what)
     return *this;
 }
 
-bool BigNumber::operator>(const BigNumber &what)
+BigNumber BigNumber::operator*(const BigNumber &what) const
+{
+    BigNumber number = *this;
+
+    return number *= what;
+}
+
+BigNumber BigNumber::operator*=(const BigNumber &what)
+{
+    const BigNumber number = *this;
+    m_data.clear();
+
+    for (size_t i(0); i != what.m_data.size(); ++i)
+    {
+        BigNumber tmpNumber = number;
+
+        for (size_t k(0); k != tmpNumber.m_data.size(); ++k)
+            tmpNumber.m_data[k] *= what.m_data[i];
+
+        for (size_t k(0); k != i; ++k)
+            tmpNumber.m_data.insert(tmpNumber.m_data.begin(), 0);
+
+        *this += tmpNumber;
+    }
+    adjust();
+
+    return *this;
+}
+
+bool BigNumber::operator>(const BigNumber &what) const
 {
     if (m_positive != what.m_positive)
         return m_positive;
 
     if (m_data.size() != what.m_data.size())
-        return m_positive;
+        return m_positive ? m_data.size() > what.m_data.size()
+                          : m_data.size() < what.m_data.size();
 
-    // equal
-    return false;
+    for (int i(m_data.size() - 1); i != -1; --i)
+    {
+        if (m_data[i] == what.m_data[i])
+            continue;
+
+        if (m_positive && m_data[i] < what.m_data[i])
+            return false;
+        if (!m_positive && m_data[i] > what.m_data[i])
+            return false;
+
+        break;
+    }
+
+    if (*this == what)
+        return false;
+
+    return true;
+}
+
+bool BigNumber::operator==(const BigNumber &what) const
+{
+    if (m_positive != what.m_positive)
+        return false;
+
+    if (m_data.size() != what.m_data.size())
+        return false;
+
+    for (size_t i(0); i != m_data.size(); ++i)
+        if (m_data[i] != what.m_data[i])
+            return false;
+
+    return true;
+}
+
+bool BigNumber::operator==(const string &what) const
+{
+    BigNumber number;
+    number = what;
+
+    return *this == number;
 }
 
 void BigNumber::adjust()
@@ -102,7 +170,7 @@ void BigNumber::adjust()
     while (m_data[m_data.size() - 1] > 10)
     {
         m_data.push_back(m_data[m_data.size() - 1] / 10);
-        m_data[m_data.size() - 1] %= 10;
+        m_data[m_data.size() - 2] %= 10;
     }
 }
 

@@ -16,8 +16,11 @@ public:
     BigNumber operator=(const string &number);
     BigNumber operator+(const BigNumber &what) const;
     BigNumber operator+=(const BigNumber &what);
-    BigNumber operator-=(const BigNumber &what);
-    bool operator>(const BigNumber &what);
+    BigNumber operator*(const BigNumber &what) const;
+    BigNumber operator*=(const BigNumber &what);
+    bool operator>(const BigNumber &what) const;
+    bool operator==(const BigNumber &what) const;
+    bool operator==(const string &what) const;
 
     friend QDebug operator<<(QDebug debug, const BigNumber &number);
 
@@ -25,7 +28,7 @@ private:
     void adjust();
 
 private:
-    bool m_positive;
+    bool m_positive = true;
     vector<int> m_data;
 };
 
