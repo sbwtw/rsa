@@ -14,13 +14,18 @@ public:
     BigNumber operator=(const std::string &number);
     BigNumber operator+(const BigNumber &what) const;
     BigNumber operator+=(const BigNumber &what);
+    BigNumber operator+=(const int what);
     BigNumber operator-(const BigNumber &what) const;
+    BigNumber operator-(const int what) const;
     BigNumber operator-=(const BigNumber &what);
     BigNumber operator*(const BigNumber &what) const;
     BigNumber operator*=(const BigNumber &what);
+    BigNumber operator/(const BigNumber &what) const;
+    BigNumber operator/=(const BigNumber &what);
     BigNumber operator%(const BigNumber &what) const;
     BigNumber operator%=(const BigNumber &what);
     bool operator>(const BigNumber &what) const;
+    bool operator>=(const BigNumber &what) const;
     bool operator==(const BigNumber &what) const;
     bool operator==(const std::string &what) const;
 

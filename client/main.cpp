@@ -36,6 +36,21 @@ void bigNumber_test()
     n2 = 50;
     Q_ASSERT(n1 % n2 == "0");
 
+    n1 = 10;
+    Q_ASSERT((n1 += 1) == "11");
+
+    n1 = 10;
+    n2 = 5;
+    Q_ASSERT((n1 / n2) == "2");
+
+    n1 = 10;
+    n2 = 3;
+    Q_ASSERT((n1 / n2) == "3");
+
+    n1 = 10;
+    n2 = 30;
+    Q_ASSERT((n1 / n2) == "0");
+
     // RSA-768
     n1 = "33478071698956898786044169848212690817704794983713768568912431388982883793878002287614711652531743087737814467999489";
     n2 = "36746043666799590428244633799627952632279158164343087642676032283815739666511279233373417143396810270092798736308917";
@@ -48,16 +63,23 @@ void bigNumber_test()
 
 void rsa_test()
 {
-    Q_ASSERT(RSA::gcd(12, 8) == 4);
-    Q_ASSERT(RSA::gcd(12, 10) == 2);
-    Q_ASSERT(RSA::gcd(3, 5) == 1);
+//    Q_ASSERT(RSA::gcd(12, 8) == 4);
+//    Q_ASSERT(RSA::gcd(12, 10) == 2);
+//    Q_ASSERT(RSA::gcd(3, 5) == 1);
+
+    BigNumber n1, n2;
+    n1 = 61;
+    n2 = 53;
+
+    RSA rsa;
+    rsa.setPublicKey(n1, n2);
 }
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    rsa_test();
+//    rsa_test();
     bigNumber_test();
 
 //    ClientWindow cw;

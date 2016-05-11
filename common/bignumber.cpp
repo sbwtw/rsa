@@ -85,6 +85,17 @@ BigNumber BigNumber::operator+=(const BigNumber &what)
     return *this;
 }
 
+BigNumber BigNumber::operator+=(const int what)
+{
+    Q_ASSERT(m_data.size());
+
+    m_data.front() += what;
+
+    adjust();
+
+    return *this;
+}
+
 BigNumber BigNumber::operator-(const BigNumber &what) const
 {
     BigNumber number = *this;
@@ -92,10 +103,20 @@ BigNumber BigNumber::operator-(const BigNumber &what) const
     return number -= what;
 }
 
+BigNumber BigNumber::operator-(const int what) const
+{
+    BigNumber number = *this;
+    BigNumber w;
+
+    w = what;
+
+    return number - w;
+}
+
 BigNumber BigNumber::operator-=(const BigNumber &what)
 {
     // TODO:
-    Q_ASSERT(*this > what || *this == what);
+    Q_ASSERT(*this >= what);
     Q_ASSERT(m_positive);
 
     if (*this == what)
@@ -136,6 +157,32 @@ BigNumber BigNumber::operator*=(const BigNumber &what)
 
         *this += tmpNumber;
     }
+
+    return *this;
+}
+
+BigNumber BigNumber::operator/(const BigNumber &what) const
+{
+    BigNumber number = *this;
+
+    return number /= what;
+}
+
+BigNumber BigNumber::operator/=(const BigNumber &what)
+{
+    BigNumber number;
+    number = 0;
+
+    while (*this > what)
+    {
+        number += 1;
+        *this -= what;
+    }
+
+    if (*this == what)
+        number += 1;
+
+    *this = number;
 
     return *this;
 }
@@ -183,6 +230,11 @@ bool BigNumber::operator>(const BigNumber &what) const
     return true;
 }
 
+bool BigNumber::operator>=(const BigNumber &what) const
+{
+    return *this == what || *this > what;
+}
+
 bool BigNumber::operator==(const BigNumber &what) const
 {
     if (m_positive != what.m_positive)
@@ -228,9 +280,9 @@ void BigNumber::adjust()
         m_data[i] %= 10;
     }
 
-    while (m_data[m_data.size() - 1] > 10)
+    while (m_data.back() > 10)
     {
-        m_data.push_back(m_data[m_data.size() - 1] / 10);
+        m_data.push_back(m_data.back() / 10);
         m_data[m_data.size() - 2] %= 10;
     }
 }
