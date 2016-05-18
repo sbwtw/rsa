@@ -9,9 +9,11 @@ public:
     RSA();
 
     static const BigNumber gcd(const BigNumber &a, const BigNumber &b);
-    static void gcdEx(const BigNumber a, const BigNumber b, BigNumber &x, BigNumber &y);
+    static void gcdEx(const BigNumber &a, const BigNumber &b, BigNumber &x, BigNumber &y);
 
     void setPublicKey(const BigNumber &p, const BigNumber &q);
+
+    bool test_key_d(const BigNumber &key_d) const;
 
 private:
     BigNumber m_key_p;

@@ -27,6 +27,7 @@ public:
     BigNumber operator%=(const BigNumber &what);
     bool operator>(const BigNumber &what) const;
     bool operator>=(const BigNumber &what) const;
+    bool operator<(const BigNumber &what) const;
     bool operator==(const BigNumber &what) const;
     bool operator==(const std::string &what) const;
 

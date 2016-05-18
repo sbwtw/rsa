@@ -280,6 +280,11 @@ bool BigNumber::operator>=(const BigNumber &what) const
     return *this == what || *this > what;
 }
 
+bool BigNumber::operator<(const BigNumber &what) const
+{
+    return !(*this >= what);
+}
+
 bool BigNumber::operator==(const BigNumber &what) const
 {
     if (m_positive != what.m_positive)

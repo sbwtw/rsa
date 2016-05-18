@@ -71,12 +71,15 @@ void bigNumber_test()
 
 void rsa_test()
 {
-    BigNumber n1, n2;
+    BigNumber n1, n2, key;
     n1 = 61;
     n2 = 53;
+    key = 2753;
 
     RSA rsa;
     rsa.setPublicKey(n1, n2);
+
+    Q_ASSERT(rsa.test_key_d(key));
 }
 
 int main(int argc, char *argv[])
