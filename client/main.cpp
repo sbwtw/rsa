@@ -19,6 +19,9 @@ void bigNumber_test()
     Q_ASSERT(n3 > n2);
     Q_ASSERT(n3 > n1);
     Q_ASSERT(n2 == n1);
+    Q_ASSERT(-n2 == -n1);
+    Q_ASSERT(-n2 == "-1025");
+    Q_ASSERT(n1 - n2 == "0");
 
     n1 = 123456789;
     n2 = 321654987;
@@ -28,6 +31,7 @@ void bigNumber_test()
     n1 = 123;
     n2 = 156;
     Q_ASSERT(n2 - n1 == "33");
+    Q_ASSERT(n1 - n2 == "-33");
 
     n1 = 17;
     n2 = 5;

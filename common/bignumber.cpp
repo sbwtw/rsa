@@ -35,12 +35,27 @@ BigNumber BigNumber::operator=(const string &number)
 
     while (true)
     {
-        for (int i : number)
+        if (number.empty())
         {
-            if (!isalnum(i))
+            m_positive = true;
+            m_data.push_back(0);
+            return *this;
+        }
+
+        size_t index(0);
+        if (number[index] == '-')
+        {
+            m_positive = false;
+            ++index;
+        }
+
+        while (index != number.size())
+        {
+            if (!isalnum(number[index]))
                 break;
 
-            m_data.insert(m_data.begin(), i - '0');
+            m_data.insert(m_data.begin(), number[index] - '0');
+            ++index;
         }
 
         return *this;
@@ -96,6 +111,15 @@ BigNumber BigNumber::operator+=(const int what)
     return *this;
 }
 
+BigNumber BigNumber::operator-() const
+{
+    BigNumber number = *this;
+
+    number.m_positive = !m_positive;
+
+    return number;
+}
+
 BigNumber BigNumber::operator-(const BigNumber &what) const
 {
     BigNumber number = *this;
@@ -115,18 +139,32 @@ BigNumber BigNumber::operator-(const int what) const
 
 BigNumber BigNumber::operator-=(const BigNumber &what)
 {
-    // TODO:
-    Q_ASSERT(*this >= what);
-    Q_ASSERT(m_positive);
-
     if (*this == what)
     {
         *this = 0;
         return *this;
     }
 
-    for (size_t i(0); i != what.m_data.size(); ++i)
-        m_data[i] -= what.m_data[i];
+    // two positive number
+    if (m_positive && what.m_positive)
+    {
+        if (*this > what)
+        {
+            for (size_t i(0); i != what.m_data.size(); ++i)
+                m_data[i] -= what.m_data[i];
+        } else {
+            return -(what - *this);
+        }
+    // two inpositive number
+    } else if (!m_positive && !what.m_positive) {
+        return -((-*this) + (-what));
+    // one positive and another inpositive
+    } else {
+        if (m_positive)
+            return *this + (-what);
+        else
+            return -((-*this) + what);
+    }
 
     adjust();
 

@@ -15,6 +15,7 @@ public:
     BigNumber operator+(const BigNumber &what) const;
     BigNumber operator+=(const BigNumber &what);
     BigNumber operator+=(const int what);
+    BigNumber operator-() const;
     BigNumber operator-(const BigNumber &what) const;
     BigNumber operator-(const int what) const;
     BigNumber operator-=(const BigNumber &what);
