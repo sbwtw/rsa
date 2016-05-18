@@ -15,8 +15,9 @@ BigNumber::BigNumber() :
 BigNumber BigNumber::operator=(const int number)
 {
     m_data.clear();
+    m_positive = number >= 0;
 
-    int N = number;
+    int N = std::abs(number);
     while (N)
     {
         m_data.push_back(N % 10);
@@ -142,6 +143,7 @@ BigNumber BigNumber::operator-=(const BigNumber &what)
     if (*this == what)
     {
         *this = 0;
+        m_positive = true;
         return *this;
     }
 
@@ -180,7 +182,9 @@ BigNumber BigNumber::operator*(const BigNumber &what) const
 
 BigNumber BigNumber::operator*=(const BigNumber &what)
 {
-    const BigNumber number = *this;
+    const bool resultPositive = !(m_positive ^ what.m_positive);
+    const BigNumber number = m_positive ? *this : -*this;
+
     m_data.clear();
 
     for (size_t i(0); i != what.m_data.size(); ++i)
@@ -195,6 +199,9 @@ BigNumber BigNumber::operator*=(const BigNumber &what)
 
         *this += tmpNumber;
     }
+
+    m_positive = resultPositive;
+    adjust();
 
     return *this;
 }
@@ -298,6 +305,15 @@ bool BigNumber::operator==(const string &what) const
 
 void BigNumber::adjust()
 {
+    if (m_data.empty())
+        m_data.push_back(0);
+
+    if (m_data.size() == 1 && m_data[0] == 0)
+    {
+        m_positive = true;
+        return;
+    }
+
     for (size_t i(0); i != m_data.size(); ++i)
     {
         while (m_data[i] < 0)

@@ -1,5 +1,7 @@
 #include "rsa.h"
 
+#include <iostream>
+
 RSA::RSA()
 {
 
@@ -10,15 +12,20 @@ const BigNumber RSA::gcd(const BigNumber &a, const BigNumber &b)
     return a == "0" ? gcd(b % a, a) : b;
 }
 
-void RSA::gcdEx(const BigNumber &a, const BigNumber &b, BigNumber &x, BigNumber &y)
+void RSA::gcdEx(const BigNumber a, const BigNumber b, BigNumber &x, BigNumber &y)
 {
-    if (b == "0")
+    if (b == "0" || b == "-0")
     {
         x = 1;
         y = 0;
     } else {
-        gcdEx(b, a % b, y, x);
-        y -= a / b * x;
+        gcdEx(b, a % b, x, y);
+        BigNumber t = x;
+        x = y;
+        y = t - ((a / b) * x);
+
+//        gcdEx(b, a % b, y, x);
+//        y -= a / b * x;
     }
 }
 
@@ -31,6 +38,11 @@ void RSA::setPublicKey(const BigNumber &p, const BigNumber &q)
     m_key_fn = (m_key_p - 1) * (m_key_q - 1);
     m_key_e = 17;//65537;
 
-    BigNumber a = m_key_e, b = m_key_fn, x, y;
+    BigNumber a, b, x, y;
+    x = 0;
+    y = 0;
+    a = m_key_e;
+    b = m_key_fn;
     gcdEx(a, b, x, y);
+    std::cerr << x << ',' << y;
 }

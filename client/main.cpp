@@ -28,6 +28,10 @@ void bigNumber_test()
     Q_ASSERT(n1 * n2 == "39710491860856743");
     Q_ASSERT(n1 * n2 == n2 * n1);
 
+    n1 = -3;
+    n2 = 5;
+    Q_ASSERT(n1 * n2 == "-15");
+
     n1 = 123;
     n2 = 156;
     Q_ASSERT(n2 - n1 == "33");
@@ -67,10 +71,6 @@ void bigNumber_test()
 
 void rsa_test()
 {
-//    Q_ASSERT(RSA::gcd(12, 8) == 4);
-//    Q_ASSERT(RSA::gcd(12, 10) == 2);
-//    Q_ASSERT(RSA::gcd(3, 5) == 1);
-
     BigNumber n1, n2;
     n1 = 61;
     n2 = 53;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-//    rsa_test();
+    rsa_test();
     bigNumber_test();
 
 //    ClientWindow cw;

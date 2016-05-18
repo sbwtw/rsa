@@ -9,7 +9,7 @@ public:
     RSA();
 
     static const BigNumber gcd(const BigNumber &a, const BigNumber &b);
-    static void gcdEx(const BigNumber &a, const BigNumber &b, BigNumber &x, BigNumber &y);
+    static void gcdEx(const BigNumber a, const BigNumber b, BigNumber &x, BigNumber &y);
 
     void setPublicKey(const BigNumber &p, const BigNumber &q);
 
