@@ -29,9 +29,15 @@ public:
     bool operator>=(const BigNumber &what) const;
     bool operator<(const BigNumber &what) const;
     bool operator==(const BigNumber &what) const;
+    bool operator!=(const BigNumber &what) const;
     bool operator==(const std::string &what) const;
 
+    bool isOdd() const;
+    bool isZero() const;
+
     friend std::ostream& operator<<(std::ostream &out, const BigNumber &number);
+
+    const std::string toStdString() const;
 
 private:
     void adjust();

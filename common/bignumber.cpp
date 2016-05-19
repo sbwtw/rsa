@@ -39,7 +39,6 @@ BigNumber BigNumber::operator=(const string &number)
         if (number.empty())
         {
             m_positive = true;
-            m_data.push_back(0);
             return *this;
         }
 
@@ -215,17 +214,43 @@ BigNumber BigNumber::operator/(const BigNumber &what) const
 
 BigNumber BigNumber::operator/=(const BigNumber &what)
 {
-    BigNumber number;
+    BigNumber number, magic, extend;
     number = 0;
 
-    while (*this > what)
+    if (*this < what)
     {
-        number += 1;
-        *this -= what;
+        *this = 0;
+        return *this;
+    }
+    if (*this == what)
+    {
+        *this = 1;
+        return *this;
     }
 
-    if (*this == what)
-        number += 1;
+    magic = what;
+    int flag = 1;
+    extend = 1;
+
+    while (magic == *this || magic < *this)
+    {
+        magic.m_data.insert(magic.m_data.begin(), 0);
+        extend.m_data.insert(extend.m_data.begin(), 0);
+        ++flag;
+    }
+
+    while (--flag)
+    {
+        magic.m_data.erase(magic.m_data.begin());
+        extend.m_data.erase(extend.m_data.begin());
+
+        // start
+        while (*this == magic || *this > magic)
+        {
+            *this -= magic;
+            number += extend;
+        }
+    }
 
     *this = number;
 
@@ -241,8 +266,25 @@ BigNumber BigNumber::operator%(const BigNumber &what) const
 
 BigNumber BigNumber::operator%=(const BigNumber &what)
 {
-    while (*this > what || *this == what)
-        *this -= what;
+    BigNumber magic;
+    magic = what;
+    int flag = 1;
+
+    while (*this > magic || *this == magic)
+    {
+        magic.m_data.insert(magic.m_data.begin(), 0);
+        ++flag;
+    }
+
+    while (--flag)
+    {
+        magic.m_data.erase(magic.m_data.begin());
+
+        while (*this == magic || *this > magic)
+        {
+            *this -= magic;
+        }
+    }
 
     return *this;
 }
@@ -259,7 +301,12 @@ bool BigNumber::operator>(const BigNumber &what) const
     for (int i(m_data.size() - 1); i != -1; --i)
     {
         if (m_data[i] == what.m_data[i])
-            continue;
+        {
+            if (i)
+                continue;
+            else
+                return false;
+        }
 
         if (m_positive && m_data[i] < what.m_data[i])
             return false;
@@ -268,9 +315,6 @@ bool BigNumber::operator>(const BigNumber &what) const
 
         break;
     }
-
-    if (*this == what)
-        return false;
 
     return true;
 }
@@ -300,12 +344,39 @@ bool BigNumber::operator==(const BigNumber &what) const
     return true;
 }
 
+bool BigNumber::operator!=(const BigNumber &what) const
+{
+    return !(*this == what);
+}
+
 bool BigNumber::operator==(const string &what) const
 {
     BigNumber number;
     number = what;
 
     return *this == number;
+}
+
+bool BigNumber::isOdd() const
+{
+    return m_data.front() & 0x1;
+}
+
+bool BigNumber::isZero() const
+{
+    return m_data.size() == 1 && m_data.front() == 0;
+}
+
+const string BigNumber::toStdString() const
+{
+    string str;
+    if (!m_positive)
+        str.push_back('-');
+
+    for (auto i(m_data.rbegin()); i != m_data.rend(); ++i)
+        str.push_back(*i + '0');
+
+    return str;
 }
 
 void BigNumber::adjust()

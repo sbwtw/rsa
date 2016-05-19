@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QTcpSocket>
 
+#include "rsa.h"
+
 class ClientWindow : public QFrame
 {
     Q_OBJECT
@@ -24,6 +26,8 @@ private:
     QPushButton *m_sendButton;
 
     QTcpSocket *m_socket;
+
+    RSA m_rsa;
 };
 
 #endif // CLIENTWINDOW_H

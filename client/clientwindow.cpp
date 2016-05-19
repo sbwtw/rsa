@@ -12,6 +12,12 @@ ClientWindow::ClientWindow(QWidget *parent) :
 
     m_socket(new QTcpSocket(this))
 {
+    BigNumber n1, n2;
+    n1 = RSA_NUMBER1;
+    n2 = RSA_NUMBER2;
+    m_rsa.setPublicKey(n1, n2);
+    m_rsa.dumpInfo();
+
     m_textArea->setReadOnly(true);
     m_sendButton->setText(tr("Send"));
 
@@ -36,13 +42,25 @@ void ClientWindow::sendMessage()
     const QString msg = m_messageEdit->text();
     m_messageEdit->clear();
 
-    m_socket->write(msg.toStdString().c_str());
+    BigNumber number;
+    number = msg.toStdString();
+    number = m_rsa.encode(number);
+
+    m_socket->write(number.toStdString().c_str());
+    m_socket->waitForBytesWritten();
     m_socket->flush();
+
+    m_textArea->appendPlainText("sent: \n" + msg);
 }
 
 void ClientWindow::readMessage()
 {
     const QString msg = m_socket->readAll();
 
-    m_textArea->appendPlainText(msg);
+    BigNumber number;
+    number = msg.toStdString();
+
+    m_textArea->appendPlainText("recv: \n" + msg);
+    m_textArea->appendPlainText("decode: ");
+    m_textArea->appendPlainText(m_rsa.decode(number).toStdString().c_str());
 }

@@ -23,11 +23,13 @@ void Server::receiveMessage()
     if (!socket)
         return;
 
-    const char *msg = socket->readAll().toStdString().c_str();
+    const QByteArray str = socket->readAll();
+
+    qDebug() << "server recv: " << str;
 
     for (QTcpSocket *sock : *m_clientList)
     {
-        sock->write(msg);
+        sock->write(str);
         sock->flush();
     }
 }
